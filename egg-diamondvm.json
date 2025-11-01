@@ -1,0 +1,115 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2025-11-01T02:51:52+01:00",
+    "name": "DiamondVM",
+    "author": "email@dominikhun250.dev",
+    "description": "SSH tunnel egg for Debian-based container with pre-installed packages.\r\n\r\nFeatures:\r\n- SSH connection to external VPS\r\n- Real-time SSH console in Pterodactyl panel\r\n- Bidirectional shared folder synchronization\r\n- Support for password and key-based authentication",
+    "features": [
+        "ssh-tunnel",
+        "shared-folder"
+    ],
+    "docker_images": {
+        "dominikhun250\/diamondvm": "dominikhun250\/diamondvm"
+    },
+    "file_denylist": [],
+    "startup": "# DiamondVM :D",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"SSH connection established successfully\",\r\n    \"userInteraction\": [\r\n        {\r\n            \"id\": \"ssh_command\",\r\n            \"question\": \"Enter SSH command to execute on remote VPS:\",\r\n            \"type\": \"text\"\r\n        }\r\n    ]\r\n}",
+        "logs": "{\r\n    \"custom\": true,\r\n    \"location\": \"logs\/ssh.log\"\r\n}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/sh\r\n\r\ngit clone https:\/\/github.com\/Dominikhun250\/DiamondVM.git \/home\/container\/\r\n\r\n# Update package list\r\nmkdir \/home\/container\/DiamondVM\r\n\r\n# Create directories\r\nmkdir -p \/home\/container\/shared \/home\/container\/logs \/home\/container\/.ssh\r\nchmod 700 \/home\/container\/.ssh\r\n\r\nchmod +x \/home\/container\/DiamondVM\/sync_shared.sh\r\n\r\ncd \/home\/container\/\r\n\r\necho \"Installation completed successfully!\"",
+            "container": "dominikhun250\/diamondvm",
+            "entrypoint": "sh"
+        }
+    },
+    "variables": [
+        {
+            "name": "VPS Host",
+            "description": "The hostname or IP address of the VPS to connect to",
+            "env_variable": "VPS_HOST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "VPS Port",
+            "description": "SSH port of the VPS (default: 22)",
+            "env_variable": "VPS_PORT",
+            "default_value": "22",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|between:1,65535",
+            "field_type": "text"
+        },
+        {
+            "name": "VPS Username",
+            "description": "SSH username for the VPS",
+            "env_variable": "VPS_USER",
+            "default_value": "root",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Use SSH Key",
+            "description": "Use SSH key authentication instead of password (0 = false, 1 = true)",
+            "env_variable": "VPS_USE_KEY",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "VPS Password",
+            "description": "SSH password for the VPS (required if not using key)",
+            "env_variable": "VPS_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "SSH Private Key",
+            "description": "SSH private key content (required if using key authentication)",
+            "env_variable": "VPS_PRIVATE_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Enable Shared Folder",
+            "description": "Enable bidirectional shared folder synchronization (0 = false, 1 = true)",
+            "env_variable": "SHARED_FOLDER_ENABLED",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto Sync Interval",
+            "description": "Auto-sync interval in seconds (0 = disable auto sync)",
+            "env_variable": "AUTO_SYNC_INTERVAL",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|min:0",
+            "field_type": "text"
+        }
+    ]
+}
